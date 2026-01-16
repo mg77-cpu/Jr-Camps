@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { Program, Partner, Session } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { Input } from "@/components/ui/input";
@@ -66,7 +67,7 @@ export default async function SessionsPage() {
                 <option value="" disabled>
                   Select program
                 </option>
-                {programs.map((p) => (
+                {programs.map((p: Program) => (
                   <option key={p.id} value={p.id}>
                     {p.name} ({p.category})
                   </option>
@@ -85,7 +86,7 @@ export default async function SessionsPage() {
                 <option value="" disabled>
                   Select partner
                 </option>
-                {partners.map((o) => (
+                {partners.map((o: Partner) => (
                   <option key={o.id} value={o.id}>
                     {o.name} ({o.type})
                   </option>
@@ -124,7 +125,7 @@ export default async function SessionsPage() {
             {sessions.length === 0 && (
               <p className="text-sm text-muted-foreground">No sessions yet.</p>
             )}
-            {sessions.map((s) => (
+            {sessions.map((s: Session & { program: Program; partner: Partner }) => (
               <div key={s.id} className="grid grid-cols-1 md:grid-cols-4 items-center gap-2 rounded-md border px-4 py-3">
                 <p className="font-medium">{s.program.name}</p>
                 <p className="text-sm text-muted-foreground">{s.partner.name}</p>

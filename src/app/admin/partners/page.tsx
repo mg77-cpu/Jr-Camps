@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { Partner } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { Input } from "@/components/ui/input";
@@ -200,7 +201,7 @@ export default async function PartnersPage() {
             {partners.length === 0 && (
               <p className="text-sm text-muted-foreground">No partners yet.</p>
             )}
-            {partners.map((p) => (
+            {partners.map((p: Partner) => (
               <div key={p.id} className="flex items-center justify-between rounded-md border px-4 py-3">
                 <div>
                   <p className="font-medium">{p.name}</p>

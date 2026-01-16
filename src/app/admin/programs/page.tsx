@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { Program } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { Input } from "@/components/ui/input";
@@ -84,7 +85,7 @@ export default async function ProgramsPage() {
             {programs.length === 0 && (
               <p className="text-sm text-muted-foreground">No programs yet.</p>
             )}
-            {programs.map((p) => (
+            {programs.map((p: Program) => (
               <div key={p.id} className="flex items-center justify-between rounded-md border px-4 py-3">
                 <div>
                   <p className="font-medium">{p.name}</p>
