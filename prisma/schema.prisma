@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
+}
+
+enum ProgramCategory {
+  SPORTS
+  STEM
+  DEFENSE
+}
+
+enum PartnerType {
+  SCHOOL
+  CITY_REC
+  APARTMENT_COMMUNITY
+}
+
+model Program {
+  id          String          @id @default(cuid())
+  name        String
+  description String?
+  category    ProgramCategory
+  sessions    Session[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model Partner {
+  id           String      @id @default(cuid())
+  name         String
+  type         PartnerType
+  location     String?
+  addressLine1 String?
+  city         String?
+  state        String?
+  postalCode   String?
+  latitude     Float?
+  longitude    Float?
+  sessions     Session[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model Session {
+  id        String    @id @default(cuid())
+  programId String
+  program   Program   @relation(fields: [programId], references: [id])
+  partnerId String
+  partner   Partner   @relation(fields: [partnerId], references: [id])
+  startDate DateTime
+  endDate   DateTime
+  capacity  Int
+  payments  Payment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model User {
+  id        String    @id @default(cuid())
+  clerkId   String    @unique
+  email     String    @unique
+  firstName String?
+  lastName  String?
+  phone     String?
+  role      String    @default("parent") // parent, staff, admin
+  students  Student[]
+  payments  Payment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Student {
+  id        String   @id @default(cuid())
+  parentId  String
+  parent    User     @relation(fields: [parentId], references: [id])
+  name      String
+  dob       DateTime
+  grade     String?
+  notes     String?
+  payments  Payment[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model Payment {
+  id               String        @id @default(cuid())
+  userId           String
+  user             User          @relation(fields: [userId], references: [id])
+  studentId        String?
+  student          Student?      @relation(fields: [studentId], references: [id])
+  sessionId        String?
+  session          Session?      @relation(fields: [sessionId], references: [id])
+  amount           Float
+  currency         String        @default("usd")
+  status           PaymentStatus @default(PENDING)
+  stripeSessionId  String?       @unique
+  stripePaymentId  String?       @unique
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+}
