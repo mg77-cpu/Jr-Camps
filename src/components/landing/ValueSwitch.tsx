@@ -157,7 +157,7 @@ export function ValueSwitch() {
                             <motion.img
                                 key={audience}
                                 src={audience === "parents"
-                                    ? "/kids-playing-chess.jpg"
+                                    ? "/kids-playing-chess (2).jpg"
                                     : "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1200"
                                 }
                                 initial={{ opacity: 0, scale: 1.1 }}

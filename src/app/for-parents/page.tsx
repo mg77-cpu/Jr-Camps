@@ -223,7 +223,7 @@ export default function ForParentsPage() {
                             >
                                 <div className="relative aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl">
                                     <img
-                                        src="/kids-playing-chess.jpg"
+                                        src="/kids-playing-chess (2).jpg"
                                         alt="Kids learning and playing"
                                         className="w-full h-full object-cover"
                                     />

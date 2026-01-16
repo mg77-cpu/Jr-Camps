@@ -72,7 +72,7 @@ export function SafetyShield() {
                         <div className="absolute -inset-10 bg-primary/20 rounded-full blur-3xl"></div>
                         <div className="relative rounded-[3rem] overflow-hidden shadow-2xl aspect-square group bg-white/5">
                             <motion.img
-                                src="/high-angle-football-trainer-teaching-kids.jpg"
+                                src="/junior sports coach-8941567.jpg"
                                 alt="Reassuring Coach"
                                 className="w-full h-full object-contain"
                                 whileHover={{ scale: 1.05 }}
