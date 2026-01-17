@@ -74,7 +74,7 @@ export function SafetyShield() {
                             <motion.img
                                 src="/junior sports coach-8941567.jpg"
                                 alt="Reassuring Coach"
-                                className="w-full h-full object-contain"
+                                className="w-full h-full object-cover object-center"
                                 whileHover={{ scale: 1.05 }}
                                 transition={{ duration: 0.6 }}
                             />

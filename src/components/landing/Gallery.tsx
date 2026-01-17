@@ -44,7 +44,9 @@ export function Gallery() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h2 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white mb-4 italic">The "Vibe Check"</h2>
+                    <h2 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white mb-4 italic">
+                        The "<span className="text-primary">Vibe</span> Check"
+                    </h2>
                     <p className="text-lg text-gray-500 max-w-2xl mx-auto">Real moments of growth, discovery, and teamwork.</p>
                 </motion.div>
 

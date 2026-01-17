@@ -19,7 +19,9 @@ export function ValueSwitch() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h2 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white mb-8">Solutions for You</h2>
+                    <h2 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white mb-8">
+                        Designed for <span className="text-primary">Parents</span> & <span className="text-primary">Partners</span>
+                    </h2>
                     <div className="inline-flex p-1 bg-gray-100 dark:bg-slate-800 rounded-full shadow-inner relative z-10">
                         <button
                             onClick={() => setAudience("parents")}
@@ -91,9 +93,6 @@ export function ValueSwitch() {
                                             ))}
                                         </div>
                                         <div className="flex flex-col sm:flex-row gap-4">
-                                            <Button className="rounded-full px-8 h-12 bg-primary hover:bg-blue-700 transition-all font-bold">
-                                                Find a Location Near Me
-                                            </Button>
                                             <Button variant="outline" asChild className="rounded-full px-8 h-12 font-bold border-2">
                                                 <Link href="/for-parents">
                                                     Learn More about Parent Benefits

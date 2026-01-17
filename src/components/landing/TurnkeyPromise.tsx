@@ -29,7 +29,9 @@ export function TurnkeyPromise() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h2 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white mb-4 italic leading-tight">Specifically Built for Institutions</h2>
+                    <h2 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white mb-4 italic leading-tight">
+                        Specifically Built for <span className="text-primary">Institutions</span>
+                    </h2>
                     <p className="text-lg text-gray-500 dark:text-gray-400">Our Turnkey Solution solves the "3:00 PM Gap" for schools and cities.</p>
                 </motion.div>
 

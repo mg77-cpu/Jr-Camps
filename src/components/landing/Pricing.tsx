@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Sparkles, Trophy, FlaskConical, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
+import { Check, DollarSign, Trophy, FlaskConical, ShieldCheck } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { PaymentModal } from "./PaymentModal";
+import { Button as MovingBorderButton } from "@/components/ui/moving-border";
 
 const plans = [
     {
@@ -109,7 +111,7 @@ export function Pricing() {
                         viewport={{ once: true }}
                         transition={{ delay: 0.2 }}
                     >
-                        <Sparkles size={16} strokeWidth={1.5} />
+                        <DollarSign size={16} strokeWidth={1.5} />
                         Transparent Pricing
                     </motion.div>
                     <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
@@ -205,7 +207,7 @@ export function Pricing() {
                                     </ul>
 
                                     {/* CTA Button */}
-                                    <button
+                                    <MovingBorderButton
                                         onClick={() => {
                                             setSelectedPlan({
                                                 name: plan.name,
@@ -214,13 +216,28 @@ export function Pricing() {
                                             });
                                             setIsModalOpen(true);
                                         }}
-                                        className={`w-full py-4 px-6 rounded-xl font-semibold text-base transition-all duration-300 ${plan.popular
-                                            ? "bg-gradient-to-r from-card-orange to-[#FF9A76] text-white shadow-lg hover:shadow-xl hover:scale-[1.02]"
-                                            : "bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-slate-600"
-                                            }`}
+                                        borderRadius="0.75rem"
+                                        duration={8000}
+                                        containerClassName="w-full h-14"
+                                        borderClassName="opacity-40"
+                                        style={{
+                                            "--moving-border-color": plan.color,
+                                        } as React.CSSProperties}
+                                        className={cn(
+                                            "w-full h-full font-semibold text-base transition-all duration-300 border-none",
+                                            plan.popular
+                                                ? "bg-gradient-to-r from-card-orange to-[#FF9A76] text-white"
+                                                : "bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-white"
+                                        )}
                                     >
-                                        Get Started
-                                    </button>
+                                        <div
+                                            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                            style={{
+                                                background: `radial-gradient(circle at center, ${plan.color}20 0%, transparent 70%)`
+                                            }}
+                                        />
+                                        <span className="relative z-10">Get Started</span>
+                                    </MovingBorderButton>
                                 </div>
                             </div>
                         </motion.div>

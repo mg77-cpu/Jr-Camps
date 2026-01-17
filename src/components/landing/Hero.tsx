@@ -56,7 +56,7 @@ export function Hero() {
                     {h1Text.split(" ").map((word, i) => (
                         <motion.span
                             key={i}
-                            className="inline-block mr-[0.25em]"
+                            className={`inline-block mr-[0.25em] ${word === "Specialized" ? "text-primary" : ""}`}
                             variants={springPop}
                         >
                             {word}

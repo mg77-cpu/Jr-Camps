@@ -438,15 +438,12 @@ export default function ForParentsPage() {
                     <div className="max-w-5xl mx-auto bg-primary rounded-[3rem] p-12 lg:p-20 text-center text-white relative overflow-hidden shadow-2xl shadow-primary/30">
                         <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-transparent" />
                         <div className="relative z-10">
-                            <h2 className="text-3xl sm:text-5xl font-bold mb-6">Ready to join the Jr Camps family?</h2>
+                            <h2 className="text-3xl sm:text-5xl font-bold mb-6">Join the Jr Camps family</h2>
                             <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
                                 We're adding new locations every month. Find a program near you and give your child the enrichment they deserve.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <Button size="lg" className="bg-white text-primary hover:bg-gray-100 rounded-full px-10 h-14 text-lg font-bold" asChild>
-                                    <Link href="#near-me">Find a Location</Link>
-                                </Button>
-                                <Button size="lg" variant="outline" className="border-2 border-white/30 text-white hover:bg-white/10 rounded-full px-10 h-14 text-lg font-bold">
+                                <Button size="lg" className="bg-white text-primary hover:bg-gray-100 rounded-full px-10 h-14 text-lg font-bold">
                                     Contact Support
                                 </Button>
                             </div>

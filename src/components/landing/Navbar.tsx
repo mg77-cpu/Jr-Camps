@@ -29,7 +29,7 @@ export function Navbar() {
                 {/* Standalone Logo */}
                 <Link
                             href="/"
-                            className="rounded-full inline-flex items-center gap-3 overflow-hidden transition-transform duration-200 hover:scale-105 shrink-0 pr-4"
+                            className="rounded-full inline-flex items-center gap-2 overflow-hidden transition-transform duration-200 hover:scale-105 shrink-0 pr-2"
                             style={{
                                 height: '48px',
                                 boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.0), 0 2px 4px -2px rgb(0 0 0 / 0.0)'
@@ -39,7 +39,7 @@ export function Navbar() {
                                 <Logo className="w-full h-full" />
                             </div>
                             <span className="text-xl font-stretch-semi-condensed font-semibold text-gray-900 tracking-tight">
-                                Jr Camps
+                                JrCamps
                             </span>
                         </Link>
 

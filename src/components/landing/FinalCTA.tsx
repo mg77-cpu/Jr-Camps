@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export function FinalCTA() {
     return (
@@ -36,11 +37,15 @@ export function FinalCTA() {
                         viewport={{ once: true }}
                         transition={{ delay: 0.3, duration: 0.6 }}
                     >
-                        <Button size="lg" className="rounded-full px-10 h-14 bg-accent-orange hover:bg-orange-600 text-white border-none shadow-xl font-bold text-lg group w-full sm:w-auto">
-                            Find a Program Near Me <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+                        <Button size="lg" asChild className="rounded-full px-10 h-14 bg-accent-orange hover:bg-orange-600 text-white border-none shadow-xl font-bold text-lg group w-full sm:w-auto">
+                            <Link href="/for-parents#near-me">
+                                Find a Program Near Me <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+                            </Link>
                         </Button>
-                        <Button size="lg" variant="outline" className="rounded-full px-10 h-14 border-2 border-white/30 text-white hover:bg-white hover:text-primary font-bold text-lg w-full sm:w-auto">
-                            Bring Jr Camps to My Site
+                        <Button size="lg" variant="outline" asChild className="rounded-full px-10 h-14 border-2 border-white/30 text-white hover:bg-white hover:text-primary font-bold text-lg w-full sm:w-auto">
+                            <Link href="/for-partners">
+                                Bring Jr Camps to My Site
+                            </Link>
                         </Button>
                     </motion.div>
                 </motion.div>
