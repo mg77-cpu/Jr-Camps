@@ -1,4 +1,4 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 function isAdminEmail(email?: string | null) {
@@ -8,8 +8,26 @@ function isAdminEmail(email?: string | null) {
 }
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { userId } = await auth();
+  const { userId, sessionId } = await auth();
   const user = await currentUser();
+
+  if (sessionId) {
+    const client = await clerkClient();
+    const session = await client.sessions.getSession(sessionId);
+
+    const toMs = (timestamp: number) => (timestamp < 1_000_000_000_000 ? timestamp * 1000 : timestamp);
+    const now = Date.now();
+    const maxIdleMs = 30 * 60 * 1000;
+    const maxAbsoluteMs = 12 * 60 * 60 * 1000;
+
+    if (typeof session.lastActiveAt === "number" && now - toMs(session.lastActiveAt) > maxIdleMs) {
+      redirect("/sign-out?redirect_url=/");
+    }
+
+    if (typeof session.createdAt === "number" && now - toMs(session.createdAt) > maxAbsoluteMs) {
+      redirect("/sign-out?redirect_url=/");
+    }
+  }
 
   if (!userId || !user) {
     redirect("/coming-soon");
@@ -34,4 +52,3 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     </div>
   );
 }
-

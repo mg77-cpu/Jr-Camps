@@ -1,19 +1,28 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Magnet } from "../ui/magnet";
 import { motion } from "framer-motion";
-import PillNav from "@/components/PillNav";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
-import { Magnet } from "@/components/ui/magnet";
 import { SignInButton, SignUpButton, UserButton, SignedIn, SignedOut, useUser } from "@clerk/nextjs";
-
 const NAV_ITEMS = [
-    { label: "For Parents", href: "/for-parents" },
-    { label: "For Schools & Cities", href: "/for-partners" },
-    { label: "Pricing", href: "/#pricing" },
+    { 
+        title: "For Parents", 
+        href: "/for-parents" 
+    },
+    { 
+        title: "For Schools & Cities", 
+        href: "/for-partners" 
+    },
+    { 
+        title: "Pricing", 
+        href: "/#pricing" 
+    },
 ];
+
+const MotionLink = motion(Link);
 
 export function Navbar() {
     const { user } = useUser();
@@ -46,53 +55,62 @@ export function Navbar() {
                 {/* Spacer to maintain centering on desktop */}
                 <div className="flex-1 hidden md:block" />
 
-                <div className="shrink-0">
-                    <PillNav
-                        items={NAV_ITEMS}
-                        baseColor="#FFB01F"
-                        pillColor="#F3F4F6"
-                        hoveredPillTextColor="#000000"
-                        pillTextColor="#111827"
-                        showLogo={false}
-                        containerBg="transparent"
-                    >
-                        {mounted && (
-                            <div className="flex flex-col gap-2 p-2">
-                                <SignedOut>
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <SignInButton mode="modal">
-                                            <Magnet padding={20} magnetStrength={3}>
-                                                <motion.button
-                                                    whileHover={{ scale: 1.05, backgroundColor: "rgba(0,0,0,0.05)" }}
-                                                    whileTap={{ scale: 0.95 }}
-                                                    className="w-full justify-center rounded-full px-4 py-2 text-sm font-semibold text-gray-700 transition-all duration-200"
-                                                >
-                                                    Log in
-                                                </motion.button>
-                                            </Magnet>
-                                        </SignInButton>
-                                        <SignUpButton mode="modal">
-                                            <Magnet padding={20} magnetStrength={3}>
-                                                <motion.button
-                                                    whileHover={{ scale: 1.05, y: -1 }}
-                                                    whileTap={{ scale: 0.95 }}
-                                                    className="w-full justify-center rounded-full px-4 py-2 text-sm font-semibold bg-primary text-white hover:bg-primary/90 transition-all duration-200 shadow-sm hover:shadow-md"
-                                                >
-                                                    Sign Up
-                                                </motion.button>
-                                            </Magnet>
-                                        </SignUpButton>
-                                    </div>
-                                </SignedOut>
-                                <SignedIn>
-                                    <div className="flex items-center gap-3 px-4 py-2">
-                                        <UserButton afterSignOutUrl="/#hero" />
-                                        <span className="text-sm font-medium text-gray-700">Account</span>
-                                    </div>
-                                </SignedIn>
-                            </div>
-                        )}
-                    </PillNav>
+                <div className="shrink-0 hidden md:flex items-center space-x-2">
+                    {NAV_ITEMS.map((item, index) => (
+                        <MotionLink
+                            key={item.title}
+                            href={item.href}
+                            className="relative group flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-black transition-all duration-200 text-sm font-medium"
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.1, duration: 0.3 }}
+                            whileHover={{ 
+                                scale: 1.15,
+                                y: -3,
+                                transition: { duration: 0.3, ease: "easeOut" }
+                            }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <motion.span 
+                                className="text-blue-600 transition-all duration-300"
+                                whileHover={{ 
+                                    scale: 1.4, 
+                                    rotate: [0, -10, 10, -10, 0],
+                                    transition: { 
+                                        scale: { duration: 0.3 },
+                                        rotate: { duration: 0.6, ease: "easeInOut" }
+                                    }
+                                }}
+                            >
+                            </motion.span>
+                            <motion.span
+                                whileHover={{ 
+                                    y: -2,
+                                    transition: { duration: 0.2 }
+                                }}
+                            >
+                                {item.title}
+                            </motion.span>
+                            
+                            {/* Enhanced floating dock-style underline with more dramatic animation */}
+                            <motion.div
+                                className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 scale-x-0 origin-center"
+                                initial={{ scaleX: 0 }}
+                                whileHover={{ 
+                                    scaleX: 1,
+                                    transition: { duration: 0.3, ease: "easeOut" }
+                                }}
+                            />
+                            {/* Additional glow effect */}
+                            <motion.div
+                                className="absolute -inset-1 bg-blue-600 opacity-0 rounded-lg blur-sm"
+                                whileHover={{ 
+                                    opacity: 0.1,
+                                    transition: { duration: 0.3 }
+                                }}
+                            />
+                        </MotionLink>
+                    ))}
                 </div>
 
                 <div className="flex-1 hidden md:flex justify-end items-center gap-2">
@@ -124,6 +142,9 @@ export function Navbar() {
                             </SignedOut>
                             <SignedIn>
                                 <div className="flex items-center gap-2">
+                                    <Button asChild variant="ghost" size="sm" className="text-[#0056b3] font-bold hover:bg-blue-50 hover:text-[#004494]">
+                                        <Link href="/portal">My Portal</Link>
+                                    </Button>
                                     <UserButton afterSignOutUrl="/#hero" />
                                     <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
                                         {user?.firstName || user?.username || 'Account'}

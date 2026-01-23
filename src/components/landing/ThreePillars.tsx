@@ -1,36 +1,86 @@
 "use client";
 
+import React, { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ChevronRight, Trophy, FlaskConical, ShieldCheck } from "lucide-react";
-import { motion } from "framer-motion";
-import { CardSpotlight } from "@/components/ui/card-spotlight";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function ThreePillars() {
-    const fadeIn = {
-        initial: { opacity: 0, y: 20 },
-        whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true },
-        transition: { duration: 0.6, ease: "easeOut" }
-    };
+    const sectionRef = useRef<HTMLElement>(null);
 
-    const staggerContainer = {
-        whileInView: {
-            transition: {
-                staggerChildren: 0.2
-            }
-        }
-    };
+    useEffect(() => {
+        const section = sectionRef.current;
+        if (!section) return;
+
+        // Use gsap.context for proper cleanup in React
+        const ctx = gsap.context(() => {
+            const headerElements = section.querySelectorAll(".features-header > *");
+            const wrappers = section.querySelectorAll(".feature-wrapper");
+            const cards = section.querySelectorAll(".feature-card");
+
+            // Initial states to avoid FOUC
+            gsap.set(headerElements, { opacity: 0, y: 50 });
+            gsap.set(wrappers, { opacity: 0, y: 100, scale: 0.95 });
+
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 60%", // Animation starts when top of section hits 60% of viewport height
+                    toggleActions: "play reverse play reverse", // Re-triggers animation on re-entry
+                    scrub: false,
+                }
+            });
+
+            // Phase 1: The Entrance (The "Anti-Gravity Arrival")
+            // Header elements drift upwards
+            tl.to(headerElements, {
+                opacity: 1,
+                y: 0,
+                duration: 1.2,
+                ease: "power3.out", // Strong ease-out
+                stagger: 0.1
+            })
+            // The Cards (Staggered Float) - Animate the Wrapper
+            .to(wrappers, {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 1.5,
+                stagger: 0.2,
+                ease: "power2.out", // Extremely slow at the end
+            }, "-=1.0"); // Overlap: Start shortly after header starts
+
+            // Phase 2: The Perpetual Float (The "Expensive" touch)
+            // Continuous, subtle floating motion - Animate the Inner Card
+            // This runs independently so it doesn't conflict with entrance/exit
+            gsap.to(cards, {
+                y: -10, // Drift up slightly
+                duration: 5, // Long duration for weightlessness
+                ease: "sine.inOut",
+                yoyo: true,
+                repeat: -1,
+                stagger: {
+                    each: 0.5,
+                    from: "random" // Randomized start
+                }
+            });
+
+        }, sectionRef);
+
+        return () => ctx.revert(); // Cleanup/kill ScrollTriggers
+    }, []);
 
     return (
-        <section id="parents" className="py-24 bg-background-light dark:bg-background-dark relative overflow-hidden">
+        <section 
+            ref={sectionRef} 
+            id="parents" 
+            className="features-section py-24 bg-background-light dark:bg-background-dark relative overflow-hidden"
+        >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <motion.div
-                    className="text-center mb-16"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                >
+                <div className="features-header text-center mb-16">
                     <h2 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">Our Core Curriculum</h2>
                     <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-6">
                         Specialized skill-building designed to turn idle time into active discovery.
@@ -42,22 +92,14 @@ export function ThreePillars() {
                         Learn more about our Parent Benefits 
                         <ChevronRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
                     </Link>
-                </motion.div>
+                </div>
 
-                <motion.div
-                    className="grid grid-cols-1 md:grid-cols-3 gap-8"
-                    initial="initial"
-                    whileInView="whileInView"
-                    viewport={{ once: true }}
-                    variants={staggerContainer}
-                >
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {/* Jr Sports */}
-                    <Link href="/jr-sports" className="block">
-                        <motion.div variants={fadeIn}>
-                            <CardSpotlight
-                                className="group bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 shadow-soft hover:shadow-card transition-all duration-500 border border-gray-100 dark:border-slate-800 overflow-hidden cursor-pointer"
-                                color="#4361EE"
-                                spotlightColor={[[67, 97, 238], [67, 97, 238]]}
+                    <div className="feature-wrapper">
+                        <Link href="/jr-sports" className="block feature-card">
+                            <div
+                                className="group bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 shadow-soft hover:shadow-card transition-all duration-500 border border-gray-100 dark:border-slate-800 overflow-hidden cursor-pointer relative hover:-translate-y-1"
                             >
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-[5rem] -mr-8 -mt-8 transition-all duration-500 group-hover:scale-110"></div>
                                 <div className="h-16 w-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 relative z-20">
@@ -86,17 +128,15 @@ export function ThreePillars() {
                                     <span className="text-sm font-bold text-gray-400">01</span>
                                     <ChevronRight className="text-primary opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-300" />
                                 </div>
-                            </CardSpotlight>
-                        </motion.div>
-                    </Link>
+                            </div>
+                        </Link>
+                    </div>
 
                     {/* Jr STEM */}
-                    <Link href="/jr-stem" className="block">
-                        <motion.div variants={fadeIn}>
-                            <CardSpotlight
-                                className="group bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 shadow-soft hover:shadow-card transition-all duration-500 border border-gray-100 dark:border-slate-800 overflow-hidden cursor-pointer"
-                                color="#FF7E67"
-                                spotlightColor={[[255, 126, 103], [255, 126, 103]]}
+                    <div className="feature-wrapper">
+                        <Link href="/jr-stem" className="block feature-card">
+                            <div
+                                className="group bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 shadow-soft hover:shadow-card transition-all duration-500 border border-gray-100 dark:border-slate-800 overflow-hidden cursor-pointer relative hover:-translate-y-1"
                             >
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-card-orange/5 rounded-bl-[5rem] -mr-8 -mt-8 transition-all duration-500 group-hover:scale-110"></div>
                                 <div className="h-16 w-16 bg-card-orange/10 rounded-2xl flex items-center justify-center text-card-orange mb-6 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 relative z-20">
@@ -125,17 +165,15 @@ export function ThreePillars() {
                                     <span className="text-sm font-bold text-gray-400">02</span>
                                     <ChevronRight className="text-card-orange opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-300" />
                                 </div>
-                            </CardSpotlight>
-                        </motion.div>
-                    </Link>
+                            </div>
+                        </Link>
+                    </div>
 
                     {/* Jr Defense */}
-                    <Link href="/jr-defense" className="block">
-                        <motion.div variants={fadeIn}>
-                            <CardSpotlight
-                                className="group bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 shadow-soft hover:shadow-card transition-all duration-500 border border-gray-100 dark:border-slate-800 overflow-hidden cursor-pointer"
-                                color="#14B8A6"
-                                spotlightColor={[[20, 184, 166], [20, 184, 166]]}
+                    <div className="feature-wrapper">
+                        <Link href="/jr-defense" className="block feature-card">
+                            <div
+                                className="group bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 shadow-soft hover:shadow-card transition-all duration-500 border border-gray-100 dark:border-slate-800 overflow-hidden cursor-pointer relative hover:-translate-y-1"
                             >
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-brand-teal/5 rounded-bl-[5rem] -mr-8 -mt-8 transition-all duration-500 group-hover:scale-110"></div>
                                 <div className="h-16 w-16 bg-brand-teal/10 rounded-2xl flex items-center justify-center text-brand-teal mb-6 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 relative z-20">
@@ -164,10 +202,10 @@ export function ThreePillars() {
                                     <span className="text-sm font-bold text-gray-400">03</span>
                                     <ChevronRight className="text-brand-teal opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-300" />
                                 </div>
-                            </CardSpotlight>
-                        </motion.div>
-                    </Link>
-                </motion.div>
+                            </div>
+                        </Link>
+                    </div>
+                </div>
             </div>
         </section>
     );

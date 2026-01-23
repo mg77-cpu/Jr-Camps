@@ -45,11 +45,7 @@ async function geocodeQ(q: string) {
 async function createPartner(formData: FormData) {
   "use server";
   const { userId } = await auth();
-  const user = await currentUser();
-  if (!userId || !user) return;
-  const adminList = (process.env.ADMIN_EMAILS || "").split(",").map((e) => e.trim().toLowerCase()).filter(Boolean);
-  const email = user.emailAddresses?.[0]?.emailAddress?.toLowerCase() || "";
-  if (!adminList.includes(email)) return;
+  if (!userId) return;
 
   const name = String(formData.get("name") || "").trim();
   const type = String(formData.get("type") || "").trim();
@@ -93,11 +89,7 @@ async function createPartner(formData: FormData) {
 async function geocodeMissingPartners() {
   "use server";
   const { userId } = await auth();
-  const user = await currentUser();
-  if (!userId || !user) return;
-  const adminList = (process.env.ADMIN_EMAILS || "").split(",").map((e) => e.trim().toLowerCase()).filter(Boolean);
-  const email = user.emailAddresses?.[0]?.emailAddress?.toLowerCase() || "";
-  if (!adminList.includes(email)) return;
+  if (!userId) return;
 
   const partners = await prisma.partner.findMany();
 
@@ -119,9 +111,15 @@ async function geocodeMissingPartners() {
 }
 
 export default async function PartnersPage() {
-  const partners = await prisma.partner.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+  let partners: Partner[] = [];
+  let dbError: string | null = null;
+  try {
+    partners = await prisma.partner.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+  } catch (e: any) {
+    dbError = e?.message || "Database error";
+  }
 
   return (
     <div className="grid gap-8">
@@ -198,6 +196,12 @@ export default async function PartnersPage() {
         </CardHeader>
         <CardContent className="pt-6">
           <div className="grid gap-3">
+            {dbError && (
+              <div className="rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3">
+                <p className="text-sm">Unable to load partners. Verify database connectivity.</p>
+                <p className="text-xs text-muted-foreground break-all">{dbError}</p>
+              </div>
+            )}
             {partners.length === 0 && (
               <p className="text-sm text-muted-foreground">No partners yet.</p>
             )}

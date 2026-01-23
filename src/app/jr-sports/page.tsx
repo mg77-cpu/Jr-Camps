@@ -6,7 +6,6 @@ import { Trophy, ChevronRight, Users, Clock, Shield, Zap, ArrowLeft } from "luci
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/Footer";
-import { CardSpotlight } from "@/components/ui/card-spotlight";
 
 const fadeIn = {
     initial: { opacity: 0, y: 20 },
@@ -33,7 +32,7 @@ const sports = [
     {
         name: "Flag Football",
         description: "Learn the fundamentals of football in a safe, non-contact environment.",
-        image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&h=400&fit=crop",
+        image: "/kaf.jpg",
         skills: ["Route Running", "Defensive Skills", "Playbook Basics"]
     },
     {
@@ -137,7 +136,7 @@ export default function JrSportsPage() {
                             >
                                 <div className="relative rounded-3xl overflow-hidden shadow-2xl">
                                     <img
-                                        src="https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=800&h=600&fit=crop"
+                                        src="/ktm.jpg"
                                         alt="Kids playing sports"
                                         className="w-full h-auto object-cover"
                                     />
@@ -189,11 +188,7 @@ export default function JrSportsPage() {
                         >
                             {sports.map((sport, index) => (
                                 <motion.div key={sport.name} variants={fadeIn}>
-                                    <CardSpotlight
-                                        className="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-soft hover:shadow-card transition-all duration-500 border border-gray-100 dark:border-slate-800 h-full"
-                                        color="#4361EE"
-                                        spotlightColor={[[67, 97, 238], [67, 97, 238]]}
-                                    >
+                                    <div className="group bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-slate-800 h-full flex flex-col">
                                         <div className="relative aspect-video overflow-hidden">
                                             <img
                                                 src={sport.image}
@@ -207,23 +202,23 @@ export default function JrSportsPage() {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="p-6 relative z-20">
-                                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                                        <div className="p-6 flex flex-col flex-grow">
+                                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                                                 {sport.name}
                                             </h3>
-                                            <p className="text-gray-500 dark:text-gray-400 mb-4 leading-relaxed">
+                                            <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm leading-relaxed flex-grow">
                                                 {sport.description}
                                             </p>
-                                            <div className="space-y-2">
+                                            <div className="space-y-2 pt-4 border-t border-gray-100 dark:border-slate-800 mt-auto">
                                                 {sport.skills.map((skill) => (
-                                                    <div key={skill} className="flex items-center text-sm text-gray-600 dark:text-gray-300">
+                                                    <div key={skill} className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                                                         <div className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />
                                                         {skill}
                                                     </div>
                                                 ))}
                                             </div>
                                         </div>
-                                    </CardSpotlight>
+                                    </div>
                                 </motion.div>
                             ))}
                         </motion.div>

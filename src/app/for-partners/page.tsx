@@ -6,7 +6,6 @@ import { ShieldCheck, IdCard, Package, Laptop, BarChart3, Building2, Users, Arro
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/Footer";
-import { CardSpotlight } from "@/components/ui/card-spotlight";
 
 const fadeIn = {
     initial: { opacity: 0, y: 20 },
@@ -89,11 +88,15 @@ export default function ForPartnersPage() {
                                     Add premium enrichment without adding a single hour to your staff's workload. We manage everything from hiring to liability.
                                 </p>
                                 <div className="flex flex-col sm:row gap-4">
-                                    <Button size="lg" className="rounded-full px-8 h-14 bg-primary hover:bg-blue-700 text-lg font-bold shadow-lg shadow-primary/20 transition-all hover:-translate-y-1">
-                                        Become a Partner
+                                    <Button size="lg" asChild className="rounded-full px-8 h-14 bg-primary hover:bg-blue-700 text-lg font-bold shadow-lg shadow-primary/20 transition-all hover:-translate-y-1">
+                                        <Link href="/coming-soon">
+                                            Become a Partner
+                                        </Link>
                                     </Button>
-                                    <Button variant="outline" size="lg" className="rounded-full px-8 h-14 text-lg font-semibold border-2 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all">
-                                        Download Partnership Guide
+                                    <Button variant="outline" size="lg" asChild className="rounded-full px-8 h-14 text-lg font-semibold border-2 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all">
+                                        <Link href="/coming-soon">
+                                            Download Partnership Guide
+                                        </Link>
                                     </Button>
                                 </div>
                             </motion.div>
@@ -183,8 +186,10 @@ export default function ForPartnersPage() {
                                         </div>
                                     ))}
                                 </div>
-                                <Button className="mt-10 rounded-full px-8 h-12 font-bold group">
-                                    Request Sample Contract <FileText className="ml-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                                <Button asChild className="mt-10 rounded-full px-8 h-12 font-bold group">
+                                    <Link href="/coming-soon">
+                                        Request Sample Contract <FileText className="ml-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                                    </Link>
                                 </Button>
                             </div>
 
@@ -215,11 +220,15 @@ export default function ForPartnersPage() {
                                 Schedule a 15-minute intro call to see how Jr Camps can add value to your location with zero administrative overhead.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <Button size="lg" className="bg-white text-slate-900 hover:bg-gray-100 rounded-full px-10 h-14 text-lg font-bold">
-                                    Schedule Intro Call
+                                <Button size="lg" asChild className="bg-white text-slate-900 hover:bg-gray-100 rounded-full px-10 h-14 text-lg font-bold">
+                                    <Link href="/coming-soon">
+                                        Schedule Intro Call
+                                    </Link>
                                 </Button>
-                                <Button size="lg" variant="outline" className="border-2 border-white/30 text-white hover:bg-white/10 rounded-full px-10 h-14 text-lg font-bold">
-                                    Contact Partnership Team
+                                <Button size="lg" variant="outline" asChild className="border-2 border-white/30 text-white hover:bg-white/10 rounded-full px-10 h-14 text-lg font-bold">
+                                    <Link href="/coming-soon">
+                                        Contact Partnership Team
+                                    </Link>
                                 </Button>
                             </div>
                         </div>

@@ -3,9 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Check, Banknote, Trophy, FlaskConical, ShieldCheck } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { PaymentModal } from "./PaymentModal";
-import { Button as MovingBorderButton } from "@/components/ui/moving-border";
+import { PaymentModal } from "@/components/landing/PaymentModal";
 
 const plans = [
     {
@@ -64,7 +62,7 @@ const plans = [
     },
 ];
 
-export function Pricing() {
+export function PortalPricing() {
     const fadeIn = {
         initial: { opacity: 0, y: 20 },
         whileInView: { opacity: 1, y: 0 },
@@ -84,10 +82,10 @@ export function Pricing() {
     const [selectedPlan, setSelectedPlan] = useState({ name: "", price: 0, period: "" });
 
     return (
-        <section id="pricing" className="py-24 bg-slate-50 dark:bg-slate-900/50 relative overflow-hidden">
+        <div className="relative">
             {/* Background decoration */}
             <motion.div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-3xl pointer-events-none"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-500/5 rounded-full blur-3xl pointer-events-none"
                 animate={{
                     scale: [1, 1.1, 1],
                     opacity: [0.3, 0.5, 0.3],
@@ -95,8 +93,8 @@ export function Pricing() {
                 transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
             />
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                {/* Section Header */}
+            <div className="relative z-10">
+                {/* Header */}
                 <motion.div
                     className="text-center mb-16"
                     initial={{ opacity: 0, y: 20 }}
@@ -105,7 +103,7 @@ export function Pricing() {
                     transition={{ duration: 0.6 }}
                 >
                     <motion.div
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 text-indigo-600 text-sm font-semibold mb-6"
                         initial={{ opacity: 0, scale: 0.8 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
@@ -114,10 +112,10 @@ export function Pricing() {
                         <Banknote size={16} strokeWidth={1.5} />
                         Honest, Upfront Pricing
                     </motion.div>
-                    <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
-                        Invest in Their Future
+                    <h2 className="text-4xl font-bold tracking-tight text-slate-900 mb-4">
+                        Choose Your Plan
                     </h2>
-                    <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+                    <p className="text-lg text-slate-500 max-w-2xl mx-auto">
                         Each program runs for 8 weeks with 1-hour sessions, twice per week. All equipment and materials included.
                     </p>
                 </motion.div>
@@ -130,7 +128,7 @@ export function Pricing() {
                     viewport={{ once: true }}
                     variants={staggerContainer}
                 >
-                    {plans.map((plan, index) => (
+                    {plans.map((plan) => (
                         <motion.div
                             key={plan.name}
                             variants={fadeIn}
@@ -139,17 +137,17 @@ export function Pricing() {
                             {/* Popular Badge */}
                             {plan.popular && (
                                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">
-                                    <span className="bg-gradient-to-r from-card-orange to-[#d4a18f] text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
+                                    <span className="bg-gradient-to-r from-orange-400 to-orange-300 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
                                         Most Popular
                                     </span>
                                 </div>
                             )}
 
                             <div
-                                className={`h-full bg-white dark:bg-slate-800 rounded-[2.5rem] p-8 shadow-soft hover:shadow-card transition-all duration-500 border ${plan.popular
-                                    ? "border-card-orange/30 ring-2 ring-card-orange/20"
-                                    : "border-gray-100 dark:border-slate-700"
-                                    } overflow-hidden`}
+                                className={`h-full bg-white rounded-[2.5rem] p-8 shadow-sm hover:shadow-lg transition-all duration-500 border ${plan.popular
+                                    ? "border-orange-200 ring-2 ring-orange-100"
+                                    : "border-slate-100"
+                                    } overflow-hidden flex flex-col`}
                             >
                                 {/* Background accent */}
                                 <div
@@ -165,8 +163,8 @@ export function Pricing() {
                                 </div>
 
                                 {/* Plan Info */}
-                                <div className="relative z-10">
-                                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+                                <div className="relative z-10 mb-8">
+                                    <h3 className="text-2xl font-bold text-slate-900 mb-1">
                                         {plan.name}
                                     </h3>
                                     <p
@@ -177,20 +175,20 @@ export function Pricing() {
 
                                     {/* Price */}
                                     <div className="flex items-baseline gap-1 mb-6">
-                                        <span className="text-4xl font-bold text-gray-900 dark:text-white">
+                                        <span className="text-4xl font-bold text-slate-900">
                                             ${plan.price}
                                         </span>
-                                        <span className="text-gray-500 text-sm">
+                                        <span className="text-slate-500 text-sm">
                                             /{plan.period}
                                         </span>
                                     </div>
 
                                     {/* Features */}
-                                    <ul className="space-y-3 mb-8">
+                                    <ul className="space-y-3">
                                         {plan.features.map((feature, i) => (
                                             <li
                                                 key={i}
-                                                className="flex items-start gap-3 text-gray-600 dark:text-gray-300"
+                                                className="flex items-start gap-3 text-slate-600"
                                             >
                                                 <div
                                                     className={`h-5 w-5 rounded-full ${plan.bgClass} flex items-center justify-center flex-shrink-0 mt-0.5`}
@@ -205,58 +203,27 @@ export function Pricing() {
                                             </li>
                                         ))}
                                     </ul>
+                                </div>
 
-                                    {/* CTA Button */}
-                                    <MovingBorderButton
+                                {/* Action Button */}
+                                <div className="mt-auto pt-8 relative z-10">
+                                    <button
                                         onClick={() => {
-                                            setSelectedPlan({
-                                                name: plan.name,
-                                                price: plan.price,
-                                                period: plan.period,
-                                            });
+                                            setSelectedPlan({ name: plan.name, price: plan.price, period: plan.period });
                                             setIsModalOpen(true);
                                         }}
-                                        borderRadius="0.75rem"
-                                        duration={9000}
-                                        containerClassName="w-full h-14"
-                                        borderClassName="opacity-40"
-                                        style={{
-                                            "--moving-border-color": plan.name === "All Access" ? "#FFFFFF" : plan.color,
-                                        } as React.CSSProperties}
-                                        className={cn(
-                                            "w-full h-full font-semibold text-base transition-all duration-300 border-none",
+                                        className={`w-full py-4 rounded-xl font-bold transition-all duration-300 transform hover:scale-[1.02] shadow-sm hover:shadow-md ${
                                             plan.popular
-                                                ? "bg-gradient-to-r from-[#F2882C] to-[#F5A966] text-white"
-                                                : "bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-white"
-                                        )}
+                                                ? "bg-indigo-600 text-white hover:bg-indigo-700"
+                                                : "bg-slate-50 text-slate-900 hover:bg-slate-100 border border-slate-200"
+                                        }`}
                                     >
-                                        <div
-                                            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                            style={{
-                                                background: `radial-gradient(circle at center, ${
-                                                    plan.name === "All Access" ? "#FFFFFF80" : `${plan.color}40`
-                                                } 0%, transparent 70%)`,
-                                            }}
-                                        />
-                                        <span className="relative z-10">Get Started</span>
-                                    </MovingBorderButton>
+                                        Choose {plan.name}
+                                    </button>
                                 </div>
                             </div>
                         </motion.div>
                     ))}
-                </motion.div>
-
-                {/* Bottom Note */}
-                <motion.div
-                    className="text-center mt-12"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.6 }}
-                >
-                    <p className="text-gray-500 text-sm">
-                        💳 Secure payments powered by Stripe • 🔄 Flexible cancellation policy • 👨‍👩‍👧‍👦 Sibling discounts available
-                    </p>
                 </motion.div>
             </div>
 
@@ -265,6 +232,6 @@ export function Pricing() {
                 onClose={() => setIsModalOpen(false)}
                 plan={selectedPlan}
             />
-        </section>
+        </div>
     );
 }

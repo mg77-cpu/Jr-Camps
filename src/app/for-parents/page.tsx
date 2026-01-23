@@ -5,10 +5,17 @@ import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle2, Shield, Heart, Zap, MapPin, Trophy, FlaskConical, ShieldCheck, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/Footer";
-import { CardSpotlight } from "@/components/ui/card-spotlight";
 import { PaymentModal } from "@/components/landing/PaymentModal";
 
 const fadeIn = {
@@ -74,9 +81,10 @@ const programs = [
 export default function ForParentsPage() {
     type Session = {
         id: string;
-        program: { name: string };
+        program: { name: string; category?: string | null };
         partner: {
             name: string;
+            type?: string | null;
             location?: string;
             addressLine1?: string;
             city?: string;
@@ -87,6 +95,7 @@ export default function ForParentsPage() {
         };
         startDate: string;
         endDate: string;
+        capacity: number;
     };
     const [sessions, setSessions] = useState<Session[]>([]);
     const [query, setQuery] = useState("");
@@ -98,6 +107,7 @@ export default function ForParentsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState({ name: "", price: 0, period: "" });
     const [selectedSessionId, setSelectedSessionId] = useState<string | undefined>();
+    const [isCatalogOpen, setIsCatalogOpen] = useState(false);
     function resetFilters() {
         setQuery("");
         setGeoLabel("");
@@ -111,6 +121,9 @@ export default function ForParentsPage() {
     }, []);
 
     const upcoming = useMemo(() => sessions.filter(s => new Date(s.endDate) >= new Date()), [sessions]);
+    const upcomingNewestFirst = useMemo(() => {
+        return [...upcoming].sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
+    }, [upcoming]);
 
     function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
         const R = 6371;
@@ -120,6 +133,9 @@ export default function ForParentsPage() {
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;
     }
+
+    const formatDate = (value: string) =>
+        new Date(value).toLocaleDateString("en-US", { timeZone: "UTC" });
 
     const filtered = useMemo(() => {
         const q = query.trim().toLowerCase();
@@ -190,7 +206,7 @@ export default function ForParentsPage() {
             <main className="pt-24">
                 {/* Hero Section */}
                 <section className="relative py-20 lg:py-32 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 dark:from-primary/20 dark:to-transparent" />
+                    <div className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-br from-primary/5 via-transparent to-primary/10 dark:from-primary/20 dark:to-transparent" />
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                             <motion.div
@@ -207,10 +223,18 @@ export default function ForParentsPage() {
                                 </p>
                                 <div className="flex flex-col sm:row gap-4">
                                     <Button size="lg" asChild className="rounded-full px-8 h-14 bg-primary hover:bg-blue-700 text-lg font-bold shadow-lg shadow-primary/20 transition-all hover:-translate-y-1">
-                                        <Link href="#near-me">Find a Location Near Me</Link>
+                                        <Link href="#near-me">Find a Program Near Me</Link>
                                     </Button>
                                     <Button variant="outline" size="lg" asChild className="rounded-full px-8 h-14 text-lg font-semibold border-2 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all">
-                                        <Link href="/#parents">View All Programs</Link>
+                                        <Link
+                                            href="/#parents"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                setIsCatalogOpen(true);
+                                            }}
+                                        >
+                                            View All Programs
+                                        </Link>
                                     </Button>
                                 </div>
                             </motion.div>
@@ -317,19 +341,18 @@ export default function ForParentsPage() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {programs.map((program) => (
                                 <Link key={program.name} href={program.href}>
-                                    <CardSpotlight
-                                        className="group p-8 bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-800 shadow-soft hover:shadow-card transition-all duration-500"
-                                        color={program.color}
+                                    <div
+                                        className="group p-8 bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-800 shadow-soft hover:shadow-card transition-all duration-500 hover:-translate-y-1 h-full flex flex-col"
                                     >
                                         <div className="h-16 w-16 rounded-2xl flex items-center justify-center mb-6 relative z-20" style={{ backgroundColor: `${program.color}15`, color: program.color }}>
                                             <program.icon size={32} />
                                         </div>
                                         <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 relative z-20">{program.name}</h3>
-                                        <p className="text-gray-500 dark:text-gray-400 relative z-20">Master new skills through expert-led clinics.</p>
-                                        <div className="mt-8 flex items-center text-sm font-bold relative z-20" style={{ color: program.color }}>
-                                            Learn More <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                                        <p className="text-gray-500 dark:text-gray-400 relative z-20 flex-grow">Master new skills through expert-led clinics.</p>
+                                        <div className="mt-8 flex items-center text-sm font-bold relative z-20 group-hover:translate-x-1 transition-transform" style={{ color: program.color }}>
+                                            Learn More <ArrowRight className="ml-2 h-4 w-4" />
                                         </div>
-                                    </CardSpotlight>
+                                    </div>
                                 </Link>
                             ))}
                         </div>
@@ -339,7 +362,7 @@ export default function ForParentsPage() {
                 <section id="near-me" className="py-24 px-4 sm:px-6 lg:px-8">
                     <div className="max-w-7xl mx-auto">
                         <div className="mb-8 text-center">
-                            <h2 className="text-3xl sm:text-4xl font-bold mb-3">Find a Location Near You</h2>
+                            <h2 className="text-3xl sm:text-4xl font-bold mb-3">Find a Program Near You</h2>
                             <p className="text-gray-500">Search by city or ZIP, or use your current location.</p>
                         </div>
                         <div className="flex flex-wrap items-center gap-3 max-w-3xl mx-auto mb-8">
@@ -406,7 +429,7 @@ export default function ForParentsPage() {
                                     </div>
                                     <div className="mt-4 text-sm">
                                       <p className="font-medium">{s.program?.name}</p>
-                                      <p className="text-gray-500">{new Date(s.startDate).toLocaleDateString()} - {new Date(s.endDate).toLocaleDateString()}</p>
+                                      <p className="text-gray-500">{formatDate(s.startDate)} - {formatDate(s.endDate)}</p>
                                     </div>
                                     <div className="mt-4">
                                       <Button variant="ghost" size="sm" className="rounded-full mr-2">Details</Button>
@@ -457,6 +480,87 @@ export default function ForParentsPage() {
                     plan={selectedPlan}
                     sessionId={selectedSessionId}
                 />
+                <AlertDialog open={isCatalogOpen} onOpenChange={setIsCatalogOpen}>
+                    <AlertDialogContent className="sm:max-w-3xl max-h-[90vh] flex flex-col">
+                        <AlertDialogHeader>
+                            <AlertDialogTitle className="text-2xl font-bold text-[#0056b3]">Available Sessions</AlertDialogTitle>
+                            <AlertDialogDescription className="text-[#7a7a7a]">
+                                Browse upcoming sessions and register for a program near you.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        
+                        <div className="flex-1 overflow-y-auto pr-2 -mr-2 py-2">
+                            <div className="flex flex-col gap-4">
+                                {upcomingNewestFirst.map((s) => (
+                                    <div
+                                        key={s.id}
+                                        className="group bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 p-5 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center"
+                                    >
+                                        <div className="space-y-1">
+                                            <div className="flex items-center gap-2">
+                                                <h3 className="font-bold text-lg text-[#0056b3]">
+                                                    {s.program?.name}
+                                                </h3>
+                                                {s.program?.category && (
+                                                    <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 text-xs font-medium">
+                                                        {s.program.category}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            
+                                            <div className="text-sm text-[#7a7a7a] space-y-0.5">
+                                                <p className="flex items-center gap-2">
+                                                    <span className="font-medium text-gray-900">{s.partner?.name}</span>
+                                                    {s.partner?.type && <span className="text-gray-400">• {s.partner.type}</span>}
+                                                </p>
+                                                <p>
+                                                    {formatDate(s.startDate)} 
+                                                    {' — '} 
+                                                    {formatDate(s.endDate)}
+                                                </p>
+                                                <p className="text-xs">Capacity: <span className="font-medium">{s.capacity}</span> students</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center gap-3 w-full sm:w-auto mt-2 sm:mt-0">
+                                            <Button 
+                                                variant="ghost" 
+                                                size="sm" 
+                                                className="hidden sm:flex text-[#0056b3] hover:text-[#004494] hover:bg-blue-50"
+                                            >
+                                                Details
+                                            </Button>
+                                            <Button
+                                                className="flex-1 sm:flex-none bg-[#f39c12] text-[#212529] font-semibold hover:bg-[#ffa500] shadow-md hover:shadow-lg transition-all rounded-lg"
+                                                onClick={() => {
+                                                    setSelectedSessionId(s.id);
+                                                    setSelectedPlan({ name: "All Access", price: 489, period: "month" });
+                                                    setIsCatalogOpen(false);
+                                                    setIsModalOpen(true);
+                                                }}
+                                            >
+                                                Register Now
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ))}
+                                
+                                {upcomingNewestFirst.length === 0 && (
+                                    <div className="py-12 text-center text-[#7a7a7a]">
+                                        <p className="text-lg font-medium">No upcoming sessions found</p>
+                                        <p className="text-sm">Please check back later for new schedules.</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        
+                        <div className="mt-4 flex justify-end pt-4 border-t border-gray-100">
+                            <AlertDialogCancel onClick={() => setIsCatalogOpen(false)} className="border-gray-200 text-gray-600 hover:bg-gray-50">
+                                Close
+                            </AlertDialogCancel>
+                        </div>
+                    </AlertDialogContent>
+                </AlertDialog>
             </main>
             <Footer />
         </div>

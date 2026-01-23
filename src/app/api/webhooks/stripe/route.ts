@@ -140,7 +140,7 @@ export async function POST(req: Request) {
         }),
       });
 
-      console.log('Successfully processed checkout and sent email for:', parentEmail);
+      console.info('checkout.session.completed', { sessionId: session.id });
     } catch (error: any) {
       console.error('[WEBHOOK_DATABASE_ERROR]', error);
       return new NextResponse(`Database Error: ${error.message}`, { status: 500 });

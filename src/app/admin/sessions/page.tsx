@@ -9,11 +9,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 async function createSession(formData: FormData) {
   "use server";
   const { userId } = await auth();
-  const user = await currentUser();
-  if (!userId || !user) return;
-  const adminList = (process.env.ADMIN_EMAILS || "").split(",").map((e) => e.trim().toLowerCase()).filter(Boolean);
-  const email = user.emailAddresses?.[0]?.emailAddress?.toLowerCase() || "";
-  if (!adminList.includes(email)) return;
+  if (!userId) return;
 
   const programId = String(formData.get("programId") || "").trim();
   const partnerId = String(formData.get("partnerId") || "").trim();
@@ -130,7 +126,8 @@ export default async function SessionsPage() {
                 <p className="font-medium">{s.program.name}</p>
                 <p className="text-sm text-muted-foreground">{s.partner.name}</p>
                 <p className="text-sm">
-                  {new Date(s.startDate).toLocaleDateString()} — {new Date(s.endDate).toLocaleDateString()}
+                  {new Date(s.startDate).toLocaleDateString("en-US", { timeZone: "UTC" })} —{" "}
+                  {new Date(s.endDate).toLocaleDateString("en-US", { timeZone: "UTC" })}
                 </p>
                 <p className="text-sm">Capacity: {s.capacity}</p>
               </div>
@@ -141,4 +138,3 @@ export default async function SessionsPage() {
     </div>
   );
 }
-

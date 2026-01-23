@@ -88,7 +88,7 @@ export async function POST(req: Request) {
         }),
       });
 
-      console.log(`Welcome email sent to ${email}`);
+      console.info('clerk.user.created', { userId: id });
     } catch (error) {
       console.error('Error processing user.created:', error);
       return new Response('Error processing user.created', { status: 500 });

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { X, Check, Loader2, LogIn, UserPlus, MapPin, Calendar } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useUser, SignInButton, SignUpButton } from "@clerk/nextjs";
+import { sanitize } from "@/lib/utils";
 
 interface Session {
     id: string;
@@ -93,9 +94,9 @@ export function PaymentModal({ isOpen, onClose, plan, sessionId }: PaymentModalP
                         phone: "",
                     },
                     studentDetails: {
-                        name: studentInfo.name,
-                        dob: studentInfo.dob,
-                        notes: studentInfo.notes,
+                        name: sanitize(studentInfo.name),
+                        dob: studentInfo.dob, // Date input is usually safe but can be sanitized if needed
+                        notes: sanitize(studentInfo.notes),
                     },
                 }),
             });
@@ -237,7 +238,7 @@ export function PaymentModal({ isOpen, onClose, plan, sessionId }: PaymentModalP
                                                 >
                                                     {sessions.map((s) => (
                                                         <option key={s.id} value={s.id} className="dark:bg-slate-900 text-gray-900 dark:text-white">
-                                                            {s.partner.name} • {new Date(s.startDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })} ({s.program.name})
+                                                    {s.partner.name} • {new Date(s.startDate).toLocaleDateString("en-US", { timeZone: "UTC" })} ({s.program.name})
                                                         </option>
                                                     ))}
                                                 </select>

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { prisma } from '@/lib/prisma';
 import { auth, currentUser } from '@clerk/nextjs/server';
+import { sanitize } from '@/lib/utils';
 
 export async function POST(req: Request) {
   try {
@@ -17,6 +18,20 @@ export async function POST(req: Request) {
     if (!planName || !amount || !parentDetails || !studentDetails || !sessionId) {
       return new NextResponse('Missing required fields', { status: 400 });
     }
+
+    // Sanitize inputs
+    const sanitizedStudentDetails = {
+      name: sanitize(studentDetails.name),
+      dob: studentDetails.dob,
+      notes: sanitize(studentDetails.notes),
+    };
+
+    const sanitizedParentDetails = {
+      firstName: sanitize(parentDetails.firstName),
+      lastName: sanitize(parentDetails.lastName),
+      email: parentDetails.email, // Clerk email is usually pre-verified but we can sanitize if it comes from metadata
+      phone: sanitize(parentDetails.phone),
+    };
 
     // 1. Handle User (Parent)
     let dbUser = await prisma.user.findUnique({ where: { clerkId: userId } });
@@ -45,7 +60,7 @@ export async function POST(req: Request) {
             currency: 'usd',
             product_data: {
               name: `Campy Program: ${planName}`,
-              description: `Registration for ${studentDetails.name}`,
+              description: `Registration for ${sanitizedStudentDetails.name}`,
             },
             unit_amount: Math.round(amount * 100),
           },
@@ -59,13 +74,13 @@ export async function POST(req: Request) {
         userId: userId,
         sessionId: sessionId,
         planName,
-        studentName: studentDetails.name,
-        studentDob: studentDetails.dob,
-        studentNotes: studentDetails.notes,
-        parentFirstName: parentDetails.firstName,
-        parentLastName: parentDetails.lastName,
-        parentEmail: parentDetails.email,
-        parentPhone: parentDetails.phone,
+        studentName: sanitizedStudentDetails.name,
+        studentDob: sanitizedStudentDetails.dob,
+        studentNotes: sanitizedStudentDetails.notes,
+        parentFirstName: sanitizedParentDetails.firstName,
+        parentLastName: sanitizedParentDetails.lastName,
+        parentEmail: sanitizedParentDetails.email,
+        parentPhone: sanitizedParentDetails.phone,
       },
     });
 
@@ -75,9 +90,9 @@ export async function POST(req: Request) {
     const student = await (prisma as any).student.create({
       data: {
         parentId: dbUser.id,
-        name: studentDetails.name,
-        dob: new Date(studentDetails.dob),
-        notes: studentDetails.notes
+        name: sanitizedStudentDetails.name,
+        dob: new Date(sanitizedStudentDetails.dob),
+        notes: sanitizedStudentDetails.notes
       }
     });
 

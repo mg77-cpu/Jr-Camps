@@ -9,11 +9,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 async function createProgram(formData: FormData) {
   "use server";
   const { userId } = await auth();
-  const user = await currentUser();
-  if (!userId || !user) return;
-  const adminList = (process.env.ADMIN_EMAILS || "").split(",").map((e) => e.trim().toLowerCase()).filter(Boolean);
-  const email = user.emailAddresses?.[0]?.emailAddress?.toLowerCase() || "";
-  if (!adminList.includes(email)) return;
+  if (!userId) return;
 
   const name = String(formData.get("name") || "").trim();
   const description = String(formData.get("description") || "").trim();
@@ -100,4 +96,3 @@ export default async function ProgramsPage() {
     </div>
   );
 }
-

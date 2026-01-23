@@ -6,7 +6,6 @@ import { FlaskConical, ChevronRight, Cpu, Lightbulb, Rocket, Wrench, ArrowLeft }
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/Footer";
-import { CardSpotlight } from "@/components/ui/card-spotlight";
 
 const fadeIn = {
     initial: { opacity: 0, y: 20 },
@@ -189,11 +188,7 @@ export default function JrStemPage() {
                         >
                             {programs.map((program, index) => (
                                 <motion.div key={program.name} variants={fadeIn}>
-                                    <CardSpotlight
-                                        className="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-soft hover:shadow-card transition-all duration-500 border border-gray-100 dark:border-slate-800 h-full"
-                                        color="#FF7E67"
-                                        spotlightColor={[[255, 126, 103], [255, 126, 103]]}
-                                    >
+                                    <div className="group bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-slate-800 h-full flex flex-col">
                                         <div className="relative aspect-video overflow-hidden">
                                             <img
                                                 src={program.image}
@@ -207,23 +202,23 @@ export default function JrStemPage() {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="p-6 relative z-20">
-                                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                                        <div className="p-6 flex flex-col flex-grow">
+                                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                                                 {program.name}
                                             </h3>
-                                            <p className="text-gray-500 dark:text-gray-400 mb-4 leading-relaxed">
+                                            <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm leading-relaxed flex-grow">
                                                 {program.description}
                                             </p>
-                                            <div className="space-y-2">
+                                            <div className="space-y-2 pt-4 border-t border-gray-100 dark:border-slate-800 mt-auto">
                                                 {program.skills.map((skill) => (
-                                                    <div key={skill} className="flex items-center text-sm text-gray-600 dark:text-gray-300">
+                                                    <div key={skill} className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                                                         <div className="w-1.5 h-1.5 rounded-full bg-card-orange mr-2" />
                                                         {skill}
                                                     </div>
                                                 ))}
                                             </div>
                                         </div>
-                                    </CardSpotlight>
+                                    </div>
                                 </motion.div>
                             ))}
                         </motion.div>
